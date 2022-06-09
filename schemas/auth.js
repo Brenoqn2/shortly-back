@@ -11,3 +11,5 @@ export const siginSchema = joi.object({
   email: joi.string().email().required(),
   password: joi.string().required(),
 });
+
+export const tokenSchema = joi.string().required();
