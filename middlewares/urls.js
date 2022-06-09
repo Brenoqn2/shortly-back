@@ -27,3 +27,20 @@ export async function validateUrlId(req, res, next) {
 
   next();
 }
+
+export async function validateShortUrl(req, res, next) {
+  const { shortUrl } = req.params;
+  const url = await db.query(
+    `
+        SELECT "shortenedLink"
+        FROM links
+        WHERE "shortenedLink" = $1
+    `,
+    [shortUrl]
+  );
+  if (url.rows.length === 0) {
+    return res.sendStatus(404);
+  }
+
+  next();
+}

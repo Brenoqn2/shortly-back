@@ -39,3 +39,29 @@ export async function getUrlById(req, res) {
     res.sendStatus(500);
   }
 }
+
+export async function openUrl(req, res) {
+  const { shortUrl } = req.params;
+  try {
+    const url = await db.query(
+      `
+        SELECT "originalLink"
+        FROM links
+        WHERE "shortenedLink" = $1
+    `,
+      [shortUrl]
+    );
+    res.status(200).redirect(url.rows[0].originalLink);
+    db.query(
+      `
+        UPDATE links
+        SET "views" = "views" + 1
+        WHERE "shortenedLink" = $1
+    `,
+      [shortUrl]
+    );
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
