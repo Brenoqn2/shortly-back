@@ -21,3 +21,21 @@ export async function shortenUrl(req, res) {
     res.sendStatus(500);
   }
 }
+
+export async function getUrlById(req, res) {
+  const { id } = req.params;
+  try {
+    const url = await db.query(
+      `
+        SELECT id, "originalLink", "shortenedLink"
+        FROM links
+        WHERE id = $1
+        `,
+      [id]
+    );
+    res.status(200).send(url.rows[0]);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
