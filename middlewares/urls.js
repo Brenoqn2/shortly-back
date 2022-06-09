@@ -44,3 +44,21 @@ export async function validateShortUrl(req, res, next) {
 
   next();
 }
+
+export async function validateTokenWithId(req, res, next) {
+  const { id } = req.params;
+  const { authorization } = req.headers;
+  const token = authorization.split(" ")[1];
+  const validation = await db.query(
+    `
+        SELECT "shortenedLink"
+        FROM links
+        WHERE id = $1 AND "userId" = (SELECT "userId" FROM sessions WHERE token = $2)
+    `,
+    [id, token]
+  );
+  if (validation.rows.length === 0) {
+    return res.sendStatus(401);
+  }
+  next();
+}
