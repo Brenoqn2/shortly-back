@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUser } from "../controllers/users.js";
+import { getUser, getRanking } from "../controllers/users.js";
 import { validateToken } from "../middlewares/auth.js";
 import { validateUser, validateTokenWithId } from "../middlewares/users.js";
 
@@ -11,5 +11,5 @@ usersRouter.get(
   validateTokenWithId,
   getUser
 );
-
+usersRouter.get("/ranking", getRanking);
 export default usersRouter;
